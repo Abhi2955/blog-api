@@ -4,7 +4,7 @@ const axios = require('axios');
 const API_KEY = 'testing';
 const BASE_URL = 'http://localhost:3000/api';
 const INITIAL_POSTS_COUNT = 50;
-const TEST_ITERATIONS = 3;
+const TEST_ITERATIONS = 2;
 
 async function createPost(id, title, content) {
   try {

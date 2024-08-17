@@ -2,37 +2,50 @@ const { v4: uuidv4 } = require('uuid');
 const Post = require('../models/Post');
 const AlreadyExistsException = require('../exceptions/AlreadyExistsException');
 const NotFoundException = require('../exceptions/NotFoundException');
+const { Mutex } = require('async-mutex');
 
 class PostRepository {
   constructor() {
     this.posts = new Map();
+    this.mutex = new Mutex();
   }
 
-  createPost(id, title, content) {
-    id = this.validateAndGenerateId(id);
-    const post = new Post(id, title, content);
-    this.posts.set(id, post);
-    return post;
+  async createPost(id, title, content) {
+    return this.mutex.runExclusive(() => {
+      id = this.validateAndGenerateId(id);
+      const post = new Post(id, title, content);
+      this.posts.set(id, post);
+      return post;
+    });
   }
 
-  getPost(id) {
-    return this.findPostOrThrow(id);
+  async getPost(id) {
+    return this.mutex.runExclusive(() => {
+      return this.findPostOrThrow(id);
+    });
   }
 
-  getAllPosts(page, limit) {
-    const allPosts = Array.from(this.posts.values());
-    return this.paginatePosts(allPosts, page, limit);
+  async getAllPosts(page, limit) {
+    return this.mutex.runExclusive(() => {
+      const allPosts = Array.from(this.posts.values());
+      return this.paginatePosts(allPosts, page, limit);
+    });
   }
 
-  updatePost(id, title, content) {
-    const post = this.findPostOrThrow(id);
-    Object.assign(post, { title, content, updatedAt: new Date() });
-    return post;
+  async updatePost(id, title, content) {
+    return this.mutex.runExclusive(() => {
+      const post = this.findPostOrThrow(id);
+      Object.assign(post, { title, content, updatedAt: new Date() });
+      this.posts.set(id, post);
+      return post;
+    });
   }
 
-  deletePost(id) {
-    this.findPostOrThrow(id);
-    return this.posts.delete(id);
+  async deletePost(id) {
+    return this.mutex.runExclusive(() => {
+      this.findPostOrThrow(id);
+      return this.posts.delete(id);
+    });
   }
 
   validateAndGenerateId(id) {
