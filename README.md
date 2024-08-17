@@ -40,7 +40,9 @@ npm loadTesting
 2. **Custom Exception Handling**
    Custom exceptions, such as PostAlreadyExistsException and NotFoundException, are implemented to provide meaningful error messages and proper HTTP status codes (e.g., 404 for not found, 409 for conflict).
 3. **Interceptors For Authentication**
-   introduce interceptors for authentication so unauthorized requests can be validated before hand.
+   introduce interceptors for authentication so unauthorized requests can be validated beforehand.
+4. **Handle Multithreding**
+   use a mutex to take a lock on the object to avoid multithreading on read-write operations and insure atrocity on that.
 
 ## Assumptions
 1. **API Key Authentication:**
@@ -54,23 +56,23 @@ npm loadTesting
 1. **Database Integration:**
    Database Integration is one of the future scope items, it allows to data loss and implement real world application.
 
-3. **Adding Cache at Interceptor level**:
+2. **Adding Cache at Interceptor level**:
   Cache can be introduce at interceptor level to avoid latency into overall system.
 
-2. **Advanced Authentication:**
+3. **Advanced Authentication:**
   Implement OAuth or JWT-based authentication for more robust security, especially if the API is intended to be publicly accessible.
 
-3. **Rate Limiting:**
+4. **Rate Limiting:**
   introducing rate limiting to prevent abuse of the API, particularly for public-facing endpoints.
 
-4. **Pagination and Filtering Enhancements:**
+5. **Pagination and Filtering Enhancements:**
   on GET /posts endpoint by adding more advanced pagination, filtering, and sorting capabilities, a generic filter probably.
 
-5. **Unit and Integration Testing:**
+6. **Unit and Integration Testing:**
   Add comprehensive unit and integration tests to ensure the API's reliability and correctness.
 
-6. **Swagger Documentation:**
+7. **Swagger Documentation:**
   Integrate Swagger to make it easier for developers to understand and use the API.
 
-7. **File Uploads for Media:**
+8. **File Uploads for Media:**
   Extend the API to support file uploads for media. This could be integrated with cloud storage solutions like AWS S3.
